@@ -1,11 +1,15 @@
-- name: HTML5/CSS3
+- name: Oracle SOA 12c
   percentage: 90
   color: danger
 
-- name: Go
+- name: API Management
   percentage: 80
   color:
 
-- name: Python
-  percentage: 70
+- name: Docker & K8s
+  percentage: 85
   color: dark
+
+- name: Cloud Native
+  percentage: 75
+  color: primary

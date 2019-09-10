@@ -7,8 +7,19 @@ weight: 1
 
 # **About Me**
 
-Hi I am **{{ site.author.name }}**,<br>
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+Hi I am **Karan**,<br>
+I'm a Technology Evangelist who loves riding the global technology wave. There's so much to learn, to try to read and play with that I find myself tinkering with something or the other whenver I can. In my free time though, I love reading, spending quality time with family, watching movies and discovering music.
+
+Outside the realm of technology - business, finance and investment interest me. I'm also an avid watch enthusiast and a Space nerd.
+
+I typically work in the areas concerning 
+* Integration 
+* API Management and Monitization
+* Service orchestration using Service-Oriented-Architecture for enterprise solutions 
+* Microservices and Serverless computing
+* Docker and Kubernetes
+* Hyperledger Fabric 
+* Full stack web technology 
 
 <div class="row">
 {% include about/skills.html title="Programming Skills" source=site.data.programming-skills %}

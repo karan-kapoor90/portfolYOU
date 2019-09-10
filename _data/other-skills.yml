@@ -1,7 +1,15 @@
-- name: Adobe Photoshop
+- name: Architecture Design
   percentage: 95
   color: info
 
-- name: Adobe Illustrator
+- name: Pre-Sales
   percentage: 90
   color: success
+
+- name: Presentation
+  percentage: 85
+  color: danger
+
+- name: Data Analysis
+  percentage: 75
+  color: primary
