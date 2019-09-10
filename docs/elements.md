@@ -1,10 +1,11 @@
+<!--
 ---
 layout: page
 title: Elements
 permalink: /elements/
 weight: 4
 ---
-
+-->
 # **Elements**
 
 A demo of Markdown and HTML includes.
