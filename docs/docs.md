@@ -1,11 +1,4 @@
-<!--
----
-layout: page
-title: Docs
-permalink: /docs/
-weight: 5
----
--->
+
 
 # About portfolYOU <small class="text-muted">{{ site.github.latest_release.tag_name }}</small>
 {:.no_toc}
