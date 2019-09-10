@@ -7,9 +7,9 @@ weight: 1
 
 # **About Me**
 
-Hi I am **Karan**,<br>
+Hi I'm **Karan**,<br>
 
-I'm a Technology Evangelist who loves riding the global technology wave. There's so much to learn, to try to read and play with that I find myself tinkering with something or the other whenver I can. In my free time though, I love reading, spending quality time with family, watching movies and discovering music.
+I'm a Technology Evangelist who loves riding the global technology wave. There's so much to learn, to read and play with that I find myself tinkering with something or the other whenver I can. In my free time though, I love reading, spending quality time with family, watching movies and discovering music.
 
 Outside the realm of technology - business, finance and investment interest me. I'm also an avid watch enthusiast and a Space nerd.
 
