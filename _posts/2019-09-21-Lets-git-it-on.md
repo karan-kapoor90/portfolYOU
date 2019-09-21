@@ -37,6 +37,7 @@ All of this is going to:
 
 
 1. In a folder that you want to create a git repo out of, do the following:
+   >  Hello world.
 2. Whats next. 
 3. something maybe
 
