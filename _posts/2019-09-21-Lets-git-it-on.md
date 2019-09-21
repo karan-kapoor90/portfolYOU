@@ -39,10 +39,10 @@ All of this is going to:
 ``` bash
 $ git init    # Initiates a repository here
 ```
-
+</br>
 
 >       This creates a branch called 'master'
-
+</br>
 
 
 2. Let's create your first file
