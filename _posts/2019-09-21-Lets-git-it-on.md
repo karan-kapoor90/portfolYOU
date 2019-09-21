@@ -37,7 +37,8 @@ All of this is going to:
 
 
 1. In a folder that you want to create a git repo out of, do the following:
-
+2. Whats next. 
+3. something maybe
 
   ``` bash
   $ git init    # Initiates a repository here
