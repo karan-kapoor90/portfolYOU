@@ -10,9 +10,8 @@ While I was *trying* to learn how to use git more efficiently, I realised that i
 
 This is essentially intended to be a basic starter kit for using git.
 
-## The Basics
 
-### A Subtle background
+# A Subtle background
 
 You're a software development team lead and you've got a bunch of newbies working on a piece of code. They're going to do the following:
 
@@ -25,6 +24,8 @@ You're a software development team lead and you've got a bunch of newbies workin
 Here's the scenario:
 
 All of this is going to:
+
+
 >       Happen on the same piece of code
 
 >           At the same time
@@ -32,13 +33,18 @@ All of this is going to:
 >               While new things are moving..    
 
 
-### Setting up a new Repository
+# Setting up a new Repository
+
 
 1. In a folder that you want to create a git repo out of, do the following:
+
 
 ``` bash
 $ git init    # Initiates a repository here
 ```
+
+
+why?
 
 
 >       This creates a branch called 'master'
@@ -145,7 +151,7 @@ To https://github.com/karan-kapoor90/test.git
 8. Voila! Your first git repo is up and running!!
 
 
-### Be a team player - Starting with existing code
+# Be a team player - Starting with existing code
 
 As a member of a highly efficient team working to wow your customers with the awesome stuff you create, you're going to start somewhere by getting a copy of the base code. Depending on what what you do in the team, you might use this code to test it, develop etc. 
 
