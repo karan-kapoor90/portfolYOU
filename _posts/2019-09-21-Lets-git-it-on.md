@@ -1,5 +1,5 @@
 ---
-title: Let's Git it on!!
+title: Lets Git it on!!
 tags: [git, beginners, essentials]
 style: fill
 description: A beginners guide to git.
