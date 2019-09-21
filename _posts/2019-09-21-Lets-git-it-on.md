@@ -196,8 +196,7 @@ As a member of a highly efficient team working to wow your customers with the aw
     $ git checkout newfeature    # to switch to the newly created branch
     ```
 
-or, you could perform both the steps together using the command (this is **instead** of the 2 steps metioned above):
-
+    or, you could perform both the steps together using the command (this is **instead** of the 2 steps metioned above):
 
     ``` bash
     $ git checkout -b newfeature     # creates a new branch called newfeature and switches to this branch
