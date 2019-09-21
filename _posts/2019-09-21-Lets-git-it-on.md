@@ -1,5 +1,5 @@
 ---
-title: Lets Git it on!!
+title: Lets Git it on
 tags: [git, beginners, essentials]
 style: 
 color: 
@@ -10,11 +10,6 @@ While I was *trying* to learn how to use git more efficiently, I realised that i
 
 This is essentially intended to be a basic starter kit for using git.
 
----
-
-[TOC]
-
----
 ## The Basics
 
 ### A Subtle background
@@ -36,6 +31,7 @@ All of this is going to:
 
 >               While new things are moving..    
 
+
 ### Setting up a new Repository
 
 1. In a folder that you want to create a git repo out of, do the following:
@@ -43,13 +39,18 @@ All of this is going to:
 ``` bash
 $ git init    # Initiates a repository here
 ```
+
+
 >       This creates a branch called 'master'
+
+
 
 2. Let's create your first file
 
 ``` bash
 $ echo "This is your first file" > README.md
 ```
+
 
 >       Git has the concept of a local staging area. When you want to add something to an existing checkpoint, it is compared with this Staging first before you commit it to the history (or state). But more on that later.
 
