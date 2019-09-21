@@ -1,7 +1,8 @@
 ---
 title: Lets Git it on!!
 tags: [git, beginners, essentials]
-style: fill
+style: 
+color: 
 description: A beginners guide to git.
 ---
 
