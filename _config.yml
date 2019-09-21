@@ -30,6 +30,7 @@ author:
 # vimeo             : your_username
 # youtube           : your_channel_name
 
+google_analytics: UA-71953143-1
 
 ### Pagination ###
 paginate: 6
