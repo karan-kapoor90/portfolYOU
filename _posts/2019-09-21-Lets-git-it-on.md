@@ -38,15 +38,20 @@ All of this is going to:
 
 1. In a folder that you want to create a git repo out of, do the following:
    >  Hello world.
+
+
+   ``` bash
+   $ echo Something rad
+   ```
 2. Whats next. 
 3. something maybe
 
-  ``` bash
-  $ git init    # Initiates a repository here
-  ```
+    ``` bash
+    $ git init    # Initiates a repository here
+    ```
 
 
-  >       This creates a branch called 'master'
+    >       This creates a branch called 'master'
 
 
 2. Let's create your first file
