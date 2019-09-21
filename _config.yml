@@ -12,15 +12,15 @@ remote_theme       : karan-kapoor90/portfolYOU    # uncomment this if you are us
 author:
   name              : Karan Kapoor
   image             : https://s3.ap-south-1.amazonaws.com/27on27.gurmehark.com/me.jpg
-  behance           : your_username
+#  behance           : your_username
 # dribbble          : your_username
   email             : karan.kapoor.work@gmail.com
 #  facebook          : your_username
-  github            : your_username
+  github            : karan-kapoor90
 # gitlab            : your_username
-# instagram         : your_username
-  linkedin          : your_username
-  medium            : your_username
+  instagram         : kapoor_karan
+  linkedin          : karankapoor1990
+#  medium            : your_username
 # soundcloud        : your_username
 # spotify           : your_username
 # stackoverflow     : your_user_id
