@@ -1,4 +1,9 @@
-# Let's Git it on!!
+---
+title: Let's Git it on!!
+tags: [git, beginners, essentials]
+style: fill
+description: A beginners guide to git.
+---
 
 While I was *trying* to learn how to use git more efficiently, I realised that it helped to have a handy guidebook. Here's some of the git commands that helped me along the way.. Let's "Git" it on!! 
 
