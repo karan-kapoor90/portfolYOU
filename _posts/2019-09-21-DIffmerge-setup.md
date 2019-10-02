@@ -82,7 +82,7 @@ graph TB
 
 <div class="mermaid">
 graph TD
-    Switch to the master branch --> Get the latest code --> Switch over to your branch --> Merge the latest code into your --> Test and BREAK NOTHING
+    id1(Switch to the master branch) --> id2(Get the latest code) --> id3(Switch over to your branch) --> id4(Merge the latest code into your) --> id5(Test and BREAK NOTHING)
 </div>
 
 
