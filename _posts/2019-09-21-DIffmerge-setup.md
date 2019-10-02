@@ -24,7 +24,7 @@ DiffMerge is a free tool used to resolve merges on a repository. It helps you do
 
 Now that you've got Diffmerge installed and working, using some of the pre-defined git properties, we can setup Diffmerge to be the default diff and merge tool.
 
-​​```mermaid
+​​``` mermaid
 graph LR
 A[Hard edge] -->B(Round edge)
     B --> C{Decision}
