@@ -20,9 +20,38 @@ DiffMerge is a free tool used to resolve merges on a repository. It helps you do
 2. Run the setup and install the software into your local machine. I wasn't able to change the directory it installs into because the Browse button was greyed out, but it's a relatively lightweight app so it won't be a space guzzler on your primary drive either. 
 3. To double check the installation, you can open a Git Bash, cmd or a PowerShell Session and type the command `sgdm`. This should open an empty DiffMerge window.
 
-## Setting up with git
+## Configuring Git
 
 Now that you've got Diffmerge installed and working, using some of the pre-defined git properties, we can setup Diffmerge to be the default diff and merge tool.
+
+>       Some of the configurations are specific to the terminal you use on windows. This tutorial configuration assumes you're using git bash. For other git distributions/ terminals, [see here](https://sourcegear.com/diffmerge/webhelp/sec__git__windows.html) .
+
+The following commands would suffice:
+
+```bash
+# To configure diffmerge as the default "Difftool"
+$ git config --global diff.tool diffmerge
+$ git config --global difftool.diffmerge.cmd "C:/Program\ Files/SourceGear/Common/DiffMerge/sgdm_cygwin.sh -p1=\"\$LOCAL\" -p2=\"\$REMOTE\" --title1="Original" --title2="Modified""
+
+# To configure diffmerge as the default "mergetool"
+$ git config --global merge.tool diffmerge
+$ git config --global mergetool.diffmerge.cmd "C:/Program\ Files/SourceGear/Common/DiffMerge/sgdm_cygwin.sh -merge -result=\"\$MERGED\" -p1=\"\$LOCAL\" -p2=\"\$BASE\" -p3=\"\$REMOTE\" --title1="CurrentBranch" --title2="Result" --title3="IncomingBranch""
+$ git config --global mergetool.diffmerge.trustExitCode true    # Git should trust the merge exit code returned by the mergetool
+$ git config --global mergetool.keepBackup false    # Do not keep the .orig backup file post merge
+```
+
+# Usage
+
+## Background
+
+1. You've got a respository called Test with a master branch and a few commits.
+
+<div class="mermaid">
+graph TB
+    subgraph master
+    baseCommit-->layout-->profile
+    end
+</div>
 
 <div class="mermaid">
 graph LR
