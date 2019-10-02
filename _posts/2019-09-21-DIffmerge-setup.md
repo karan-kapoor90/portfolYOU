@@ -16,11 +16,14 @@ DiffMerge is a free tool used to resolve merges on a repository. It helps you do
 
 ## Download & Install Diffmerge
 
+
 1. Navigate to [Diffmerge Download](https://sourcegear.com/diffmerge/downloads.php) and download diffmerge for your platform. 
 2. Run the setup and install the software into your local machine. I wasn't able to change the directory it installs into because the Browse button was greyed out, but it's a relatively lightweight app so it won't be a space guzzler on your primary drive either. 
 3. To double check the installation, you can open a Git Bash, cmd or a PowerShell Session and type the command `sgdm`. This should open an empty DiffMerge window.
 
+
 ## Configuring Git
+
 
 Now that you've got Diffmerge installed and working, using some of the pre-defined git properties, we can setup Diffmerge to be the default diff and merge tool.
 
@@ -46,12 +49,12 @@ $ git config --global mergetool.keepBackup false    # Do not keep the .orig back
 
 1. You've got a respository called Test with a master branch and a few commits.
 
-<div class="mermaid">
-graph TB
-    subgraph master
-    baseCommit-->layout-->profile
-    end
-</div>
+        <div class="mermaid">
+        graph TB
+            subgraph master
+            baseCommit-->layout-->profile
+            end
+        </div>
 
 <div class="mermaid">
 graph LR
