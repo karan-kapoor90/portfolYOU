@@ -49,12 +49,14 @@ $ git config --global mergetool.keepBackup false    # Do not keep the .orig back
 
 1. You've got a respository called Test with a master branch and a few commits.
 
-        <div class="mermaid">
-        graph TB
-            subgraph master
-            baseCommit-->layout-->profile
-            end
-        </div>
+
+<div class="mermaid">
+graph TB
+    subgraph master
+    baseCommit-->layout-->profile
+    end
+</div>
+
 
 2. Next thing you create a new branch to create a search feature. Make some code changes and commit them.
 
@@ -66,30 +68,30 @@ $ git config --global mergetool.keepBackup false    # Do not keep the .orig back
     ```
 
 
-    <div class="mermaid">
-    graph TB
-        subgraph master
-        baseCommit-->layout-->profile
-        end
-        subgraph searchBranch
-        baseCommit-->layout-->profile-->search1.0
-        end
-    </div>
+<div class="mermaid">
+graph TB
+    subgraph master
+    baseCommit-->layout-->profile
+    end
+    subgraph searchBranch
+    baseCommit-->layout-->profile-->search1.0
+    end
+</div>
 
 3. Suddenly you're told you need to integrate search for Usernames that's gone live in the master branch!! That basically means:
 
-    <div class="mermaid">
-    graph TD
-        Switch to the master branch --> Get the latest code --> Switch over to your branch --> Merge the latest code into your --> Test and BREAK NOTHING
-    </div>
+<div class="mermaid">
+graph TD
+    Switch to the master branch --> Get the latest code --> Switch over to your branch --> Merge the latest code into your --> Test and BREAK NOTHING
+</div>
 
 
-    <div class="mermaid">
-    graph TB
-        subgraph master
-        baseCommit-->layout-->profile-->usernames
-        end
-        subgraph searchBranch
-        baseCommit-->layout-->profile-->search1.0
-        end
-    </div>
+<div class="mermaid">
+graph TB
+    subgraph master
+    baseCommit-->layout-->profile-->usernames
+    end
+    subgraph searchBranch
+    baseCommit-->layout-->profile-->search1.0
+    end
+</div>
