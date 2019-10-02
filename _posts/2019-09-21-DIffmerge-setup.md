@@ -71,10 +71,10 @@ graph TB
 <div class="mermaid">
 graph TB
     subgraph master
-    m1[baseCommit]-->m2[layout]-->m3[profile]
+    m1[baseCommit] --> m2[layout] --> m3[profile]
     end
     subgraph searchBranch
-    s1[baseCommit]-->s2[layout]-->s3[profile]-->s4[search1.0]
+    s1[baseCommit] --> s2[layout] --> s3[profile] --> s4[search1.0]
     end
 </div>
 
