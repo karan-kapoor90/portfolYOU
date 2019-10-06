@@ -149,5 +149,15 @@ graph TB
 6. Move the final code (what the fixed code should look like) into the middle quadrant, save the file and exit the mergetool.
 7. This will close the merge session once you've done it for all the files that required a manual merging and create a new commit called Merge branch 'master' into searchBranch. Use `$git log` to view the commit history on the branch. Interestingly, you'll notice a commit called username followed by a commit named Merge branch 'master' into searchBranch. The reason git does this is because it tracks history closely and ensures that you can always track what point changes were made to the codebase.  
 
+By the way, it's common practice to delete the branch you were developing the new feature once it's been merged into master and has served it's purpose. 
+
+```bash
+# Remove the local copy of the branch
+$ git branch -D searchFeature
+
+# Remove the remote copy/ branch from the server
+$ git push :searchFeature   # the ":" tells the remote server to delete the branch
+```
+
 
 > But what if the changes I was making to the search branch weren't commit ready when the username requirement came? That's a story for another blog, Git Stash to the rescue.
