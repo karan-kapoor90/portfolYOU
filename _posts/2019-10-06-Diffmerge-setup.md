@@ -47,7 +47,7 @@ $ git config --global mergetool.keepBackup false    # Do not keep the .orig back
 
 ## Background
 
-1. You've got a respository called Test with a master branch and a few commits.
+You've got a respository called Test with a master branch and a few commits.
 
 
 <div class="mermaid">
@@ -58,14 +58,7 @@ graph TB
 </div>
 
 
-2. Next thing you create a new branch to create a search feature. Make some code changes and commit them.
-
-    ```bash
-    $ git checkout -b searchBranch
-    # You create the super awesome search functionality, the next best thing to google perhaps?
-    $ git add .
-    $ git commit -m "search 0.1"
-    ```
+Next thing you create a new branch to create a search feature. Make some code changes, stage them and commit them (just like excellent developers do :) ).
 
 
 <div class="mermaid">
@@ -73,17 +66,21 @@ graph TB
     subgraph master
     m1[baseCommit] --> m2[layout] --> m3[profile]
     end
+
     subgraph searchBranch
     s1[baseCommit] --> s2[layout] --> s3[profile] --> s4[search1.0]
     end
 </div>
 
-3. Suddenly you're told you need to integrate search for Usernames that's gone live in the master branch!! That basically means:
+Suddenly you're told you need to integrate search for Usernames that's gone live in the master branch!! That basically means:
 
 <div class="mermaid">
 graph TD
-    id1(Switch to the master branch) --> id2(Get the latest code) --> id3(Switch over to your branch) --> id4(Merge the latest code into your) --> id5(Test and BREAK NOTHING)
+    id1(Switch to the master branch) --> id2(Get the latest code) --> id3(Switch over to your new branch) --> id4(Merge the latest code into your branch) --> id5(Run mergetool)-->id6(Add and commit changes)
 </div>
+
+
+The current state should look something like:
 
 
 <div class="mermaid">
@@ -95,3 +92,62 @@ graph TB
     s1[baseCommit]-->s2[layout]-->s3[profile]-->s4[search1.0]
     end
 </div>
+
+
+And since you only want to merge the code into your branch and not yet push the search feature to master, the end state should look like:
+
+<div class="mermaid">
+graph TB
+    subgraph master
+    m1[baseCommit]-->m2[layout]-->m3[profile]-->m4[usernames]
+    end
+    subgraph searchBranch
+    s1[baseCommit]-->s2[layout]-->s3[profile]-->s4[search1.0]-->s5[username]-->s6[Merge branch 'master' into searchBranch]
+    end
+</div>
+
+
+## HowTo:
+
+1. You're on master branch
+    ```bash
+    $ git checkout master
+    ```
+
+2. Creating a new branch called searchBranch
+
+    ```bash
+    $ git checkout -b searchBranch
+    # You create the super awesome search functionality, the next best thing to google perhaps?
+    $ git add .
+    $ git commit -m "search 0.1"
+    ```
+3. Getting the latest "username" code on your local master branch
+
+    ```bash
+    $ git checkout master
+    $ git pull
+    ```
+
+    > A merge conflict arises only if there have been changes on the same file in the 2 codebases you're trying to merge. Files that don't have changes in both codebases are automerged by git! Git is smart :-)
+
+
+4. Merging into the search branch
+
+    ```bash
+    $ git merge master
+
+    Auto-merging <filename>
+    CONFLICT (content): Merge conflict in README.MD
+    Automatic merge failed; fix conflicts and then commit the result.
+    ```
+5. Mergetool to the rescue!!
+
+    ```bash
+    $ git mergetool
+    ```
+6. Move the final code (what the fixed code should look like) into the middle quadrant, save the file and exit the mergetool.
+7. This will close the merge session once you've done it for all the files that required a manual merging and create a new commit called Merge branch 'master' into searchBranch. Use `$git log` to view the commit history on the branch. Interestingly, you'll notice a commit called username followed by a commit named Merge branch 'master' into searchBranch. The reason git does this is because it tracks history closely and ensures that you can always track what point changes were made to the codebase.  
+
+
+> But what if the changes I was making to the search branch weren't commit ready when the username requirement came? That's a story for another blog, Git Stash to the rescue.
