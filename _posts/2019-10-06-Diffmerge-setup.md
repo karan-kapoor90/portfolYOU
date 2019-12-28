@@ -50,18 +50,20 @@ $ git config --global mergetool.keepBackup false    # Do not keep the .orig back
 You've got a respository called Test with a master branch and a few commits.
 
 
-<div class="mermaid">
+<div class="mermaid text-center">
 graph TB
     subgraph master
     baseCommit-->layout-->profile
     end
+style master fill:#f1f1f1
+style master stroke-width:0px
 </div>
 
 
 Next thing you create a new branch to create a search feature. Make some code changes, stage them and commit them (just like excellent developers do :) ).
 
 
-<div class="mermaid">
+<div class="mermaid text-center">
 graph TB
     subgraph master
     m1[baseCommit] --> m2[layout] --> m3[profile]
@@ -70,11 +72,15 @@ graph TB
     subgraph searchBranch
     s1[baseCommit] --> s2[layout] --> s3[profile] --> s4[search1.0]
     end
+style master fill:#f1f1f1
+style master stroke-width:0px
+style searchBranch fill:#f1f1f1
+style searchBranch stroke-width:0px
 </div>
 
 Suddenly you're told you need to integrate search for Usernames that's gone live in the master branch!! That basically means:
 
-<div class="mermaid">
+<div class="mermaid text-center">
 graph TD
     id1(Switch to the master branch) --> id2(Get the latest code) --> id3(Switch over to your new branch) --> id4(Merge the latest code into your branch) --> id5(Run mergetool)-->id6(Add and commit changes)
 </div>
@@ -83,7 +89,7 @@ graph TD
 The current state should look something like:
 
 
-<div class="mermaid">
+<div class="mermaid text-center">
 graph TB
     subgraph master
     m1[baseCommit]-->m2[layout]-->m3[profile]-->m4[usernames]
@@ -91,19 +97,27 @@ graph TB
     subgraph searchBranch
     s1[baseCommit]-->s2[layout]-->s3[profile]-->s4[search1.0]
     end
+style master fill:#f1f1f1
+style master stroke-width:0px
+style searchBranch fill:#f1f1f1
+style searchBranch stroke-width:0px
 </div>
 
 
 And since you only want to merge the code into your branch and not yet push the search feature to master, the end state should look like:
 
-<div class="mermaid">
+<div class="mermaid text-center">
 graph TB
     subgraph master
     m1[baseCommit]-->m2[layout]-->m3[profile]-->m4[usernames]
     end
     subgraph searchBranch
-    s1[baseCommit]-->s2[layout]-->s3[profile]-->s4[search1.0]-->s5[username]-->s6[Merge branch 'master' into searchBranch]
+    s1[baseCommit]-->s2[layout]-->s3[profile]-->s4[search1.0]-->s5[usernames]-->s6[Merge branch 'master' into searchBranch]
     end
+style master fill:#f1f1f1
+style master stroke-width:0px
+style searchBranch fill:#f1f1f1
+style searchBranch stroke-width:0px
 </div>
 
 
