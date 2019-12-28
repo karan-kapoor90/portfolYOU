@@ -112,7 +112,7 @@ Containerization has existed since the 1970's in it's early forms however with t
 <div class="mermaid text-center">
 graph TB
     subgraph Flow
-    Application-->Container-->Container Daemon on Host-->BIOS-->Hardware
+    Application-->Container-->c1[Container Daemon on Host]-->BIOS-->Hardware
     end
 style Flow fill:#f1f1f1
 style Flow stroke-width:0px
