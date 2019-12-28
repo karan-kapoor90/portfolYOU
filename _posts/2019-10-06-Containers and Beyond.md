@@ -1,5 +1,5 @@
 ---
-title: Docker, cantainers and beyond
+title: Docker, containers and beyond
 tags: [docker, kubernetes, cloud-native]
 style: 
 color: 
