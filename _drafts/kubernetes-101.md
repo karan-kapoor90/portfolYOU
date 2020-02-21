@@ -8,7 +8,6 @@ description: A primer guide with commands and syntax for kubernetes
 
 ## Kubernetes Master Plane Components
 
-
 1. etcd - key value store that holds all the data about the cluster, the pods, containers, versions, deployment times etc. Default port 2379
 2. kube-scheduler - the component that manages deployment of containers on a node, identifies the right node as per the policies etc.
 3. Controllers - monitors the state of resources and works to bring them to the desired state
@@ -34,6 +33,9 @@ type: Pod
         containers:
             - name: <somename_for_container>
               image: karankapoor/container_name
+              ports:
+                -  containerPort: 8080
+          
 ```
 
 > One of the major differences b/w replication controller and the replicaSet is the selector label. Selector labels help the replicaset control pods that weren't created using the template inside the RS definition. The Selector label is an optional component in the RC. 
@@ -550,7 +552,7 @@ Static pods create using the kubelet directly show up in `kubectl get pods` as w
 
 > Use case: this can be used to deploy pods on a node such that they're not dependent on the kubernetes control plane. We can use it to deploy the various control plane components as well. That's how kubeadm does the setup. You install kubelet, create pod defiition file for docker and then put into the static pods folder. 
 
-Static Pods(SP) vs Daemon Sets(DS):
+#### Static Pods(SP) vs Daemon Sets(DS):
 
 SP: Created by Kubelet
 DS: Created by Kube API server using the DaemonSet Controller
@@ -598,6 +600,8 @@ spec:
     - kube-scheduler
     - --scheduler-name=my-scheduler  # Additional Parameter
     - --port=10282  # Additional Parameter
+    - --leader-elect=false  # Set as false in case you have multiple schedulers but a single master. Set to true if you have multiple masters
+    - --lock-object-name=my-scheduler   # Set in case you have multiple schedulers and multiple masters
     livenessProbe:
       failureThreshold: 8
       httpGet:
@@ -624,3 +628,353 @@ spec:
   - name: nginx
     image: nginx
 ```
+
+
+### Logging and monitoring
+
+Heapster was the original solution for running metrics on a k8s cluster but that has now been depricated and a slimmed down version called Metrics Server is now used. 
+The kubelet on every node is responsible for reporting the metrics to the kube api server intermittently. It internally uses something called the cAdvisor (container advisor) to get this data. Note that metrics server is a completely in-memory solution and hence cannot give historic reporting.
+
+To deploy the metrics server, clone the git repo for metrics server and run the yaml files to deploy the metrics server to the cluster. After its deployed, you need to give the pods some time to collect the data. Then run 
+
+- `kubectl top node` to show node level metrics
+
+- `kubectl top pod` to show pod level consumption metrics
+
+
+### Deployment and rollouts
+
+When yoy create a new deployment, a rollout is created. When you do a rollout then, a new deployment version is created every time for a new revision. 
+
+```bash
+$ kubectl rollout status deploy <deployment_name>   # tracks the rollout of a deployment
+
+$ kubectl rollout history deploy <deployment_name>    # something like a git history of all the rollouts on the deployment
+
+```
+
+#### Deployment strategies
+
+1. Recreate - Delete all pods, then create new ones. This is obviously not the default strategy as the service who's pods have been deleted will be unavailable till the new pods come up
+
+2. Rolling update - Maintains a minimum a max number of pods at any given time while it kills pods systmatically and replaces them with new ones. This is the default deployment strategy.
+
+Apply changes to a deployment by:
+1. Changing the image in the deployment yaml descriptor file and then using `kubectl apply` to apply it
+2. Using the `kubectl set image deploy <deployment_name> <container_name>=<new_image_name>`. This however will not make the changes to the descriptor file and hence can lead to a synchronization mismatch between the actual deployed and the file.
+
+The rolling update strategy creates a new Replica Set in the deployment with the new deployment parameters. It then starts scaling down the number of replicas in the old replica set to a 0 while incresing the number of pods in the new replica set. 
+
+> But what if theres a mistake in the new deploynment. Rollback will do the opposite of the rolling update by scaling up the pods in the old replica set, replacing the pods from the new replica set.
+
+#### Rollback
+
+```bash
+$ kubectl rollout undo deploy <deployment_name>
+```
+
+
+### Correlating docker and k8s and configuration
+
+#### Docker background
+
+There are 3 basic commands in the dockerfile setup that specifcy what runs in the container.
+
+1. RUN - this is used to run commands that are used for setting up the container, such as downloading dependencies and packages etc. This creates a new layer on your base image.
+2. ENTRYPOINT - specifies the command that is run when a container starts. For example ["sleep"]. This tells the container to run the sleep command as soon as it starts. The command however needs a parameter for it to work (the duration to sleep for in this case.)
+3. CMD - this takes an array format for the command that needs to be run when the container starts. It is best used in tandem with the ENTRYPOINT. When used alone, it can get the container to sleep for 5 seconds as so ["sleep","5"]. When used in tandem with ENTRYPOINT, the arguments would be simply ["5"]. 
+
+Then why use entrypoint at all?
+
+Without entrypoint this is what the docker command would look like. CMD ["SLEEP","5"]
+
+```bash
+$ docker run sleeping_ubuntu    # Start the container and sleep for 5 seconds
+# Now we want to have it sleep for 10 seconds instead
+$ docker run sleeping_ubuntu start 10   # Notice how you need to pass the whole command as an argument to ovverride it. 
+```
+
+With entrypoint 
+
+ENTRYPOINT ["sleep"]
+CMD ["5"]
+
+```bash
+$ docker run sleeping_ubuntu    # start container and get it to sleep for 5 seconds
+# overriding to sleep for 10 seconds
+$ docker run sleeping_ubuntu 10   # overrides the setting in the CMD property
+
+# Note: the entrypoint can also be overridden by passing in the CLI property --entrypoint
+```
+
+#### Playing this in tandem with kubernetes
+
+In the kubernetes pod definition file, for each container, 
+
+1. command:["sleep"] - this replaces/ overrides the entrypoint docker command
+2. args:["5"] - overrides the CMD fromt he dockerfile configuration
+
+
+#### Passing Environment variables
+
+When running docker containers, the way to pass environment variables would be as follows
+
+```bash
+$ docker run -e <variable_key>=<variable_value> <container_name>
+```
+
+To do the same thing in k8s, one can do this in the env array in a container definition in a pod definition
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+  label:
+    app: myapp
+spec:
+  template:
+    containers:
+    -  name: my-container
+       image: <image_name>
+       env:
+       - name: <key_name>
+         value: <value>
+```
+
+Additionally, the value can come from a configMap or a secret in k8s. Instead of `value`, use the key `valueFrom` instead like so:
+
+```yaml
+# to get value from a config map
+env:
+- name: <key_name>
+  valueFrom:
+    configMapKeyRef: <refrence to configmap key>
+
+# to get value from a secret
+env:
+- name: <key_name>
+  valueFrom:
+    secretKeyRef: <refrence to configmap key>
+```
+
+
+### Passing parameters into Containers
+
+#### Using ConfigMaps
+
+Config maps are simple key value pair for passing data to kubernetes yaml files. these can be created in 2 ways:
+
+1. Imperative
+
+```bash
+# from the CLI
+$ kubectl create configMap <config-name> --from-literal=<key-name>=<value> --from-literal=<key-name>=<value>
+
+# using a properties file
+$ kubectl create configMap <config-name> --from-file=configFile.properties
+```
+
+Properties file format is as:
+
+```json
+APP_NAME: my-app
+color: green
+```
+
+2. Declerative
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name:
+data:
+  <key-name>: value
+  <key-name>: value
+  
+```
+
+Then just use the `kubectl create -f` to create the configmap.
+
+To use the configMap in a pod, add it to the pod spec as so
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+  label:
+    app: my-app
+spec:
+  containers:
+  - name: my-container
+    image: some-image
+  envFrom:
+  - configMapRef:
+      name: <configmap-name>
+```
+
+The above will inject all the key value pairs in the configMap as environment variables into the container. 
+
+There are 2 more ways of injecting variables.
+
+1. Pass a particular varibale instead of an entire config map
+
+Instead of `envFrom`, use `env`
+
+```yaml
+env:
+  - name: <the to be environment varibale name>
+    valueFrom: 
+      configMapKeyRef:
+        name: <configMap name>
+        key: <which key's value from the configMap to be mapped to the variable>
+
+```
+
+2. Mounting a configmap as a volume
+
+```yaml
+volumes:
+- name: <new-volume-name>
+  configMap:
+    name: <config map name>
+```
+
+#### Using Secrets
+
+1. Imperative Creation:
+
+```bash
+$ kubectl create secret generic <secret-name> --from-literal=<key-name>=value --from-literal=<key-name>=<value>
+```
+
+or pass `--from-file` and give the path to a properties file container all the properties
+
+2. Declerative Creation:
+
+```yaml
+apiVersion: v1
+kind: Secret
+metadata:
+  name: my-secret
+data: 
+  hostname: <data>
+  username: <data>
+  password: <data>
+```
+
+> Note that encoding the secret values when using the Imperative decleration using the CLI is not required. Kubernetes does that automatically.
+
+In order for the <data> to be human unreadable, it needs to be converted to base64 before inserting into the secret data. This can be done as follows:
+
+```bash
+$ echo -n '<data>' | base64   # this works on a linux/ unix machine
+# For example 
+
+$ echo -n 'Welcome1' | base64
+V2VsY29tZTE=
+```
+
+To get and describe secrets use the following:
+
+```bash
+$ kubectl get secrets
+$ kubectl describe secret <secret-name>
+```
+
+The describe command will give the secret value in an encoded format. To decode the value, use the following command
+
+```bash
+$ echo -n '<encoded-value>' | base64 --decode
+```
+
+In order to inject the secret into a container, do the following:
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  - containers:
+    - name: my-container
+      image: image-name
+      envFrom:
+        - secretRef:
+            name: my-secret
+# this will inject the entire secret into the container in the pod
+```
+
+Other wats to do it are as follows:
+
+1. As a single environment variable
+
+```yaml
+env:
+- name: entry-name
+  valueFrom:
+    secretKeyRef:
+    - name: my-secret
+      key: key-name
+```
+
+2. As a volume
+
+```yaml
+volumes:
+- name: volume-name
+  secret:
+    secretName: my-secret
+```
+
+When injecting the secrets as a volume into a container, each key is created as a new file inside the container with the data.key as the filename and the data.key.value as the value inside the file. Hence doing a `cat /opt/valume-name/<key-name>` shows you the value of the secret.
+
+> When injecting secrets as a volume, recreating the pod is not necessary. The time taken for the updated value to reflect in the contnainers inside the pod is a factor of the kube-api accepting the value + the sync delay between the api-server and the kubelet. In case of environment variables, 
+
+Since it is this easy to decode a secret, it is obviously inherently not that secure. It hence makes sense to:
+1. Not check in your secrets into source code.
+2. Enable encryption at rest so they are encrypted even when kept in etcd.
+
+A few important points about secrets though:
+1. A secret is only sent to a node if the pod on that node requires it
+2. The kubelet stores the password in tempfs and not the file system
+3. Once the pod that depends on the secret is deleted, the kubelet deletes the local copy of the secret as well.
+
+> A better way to handling secrets in k8s hence are using other solutions such as Helm secrets or HashiCorp Vault.
+
+
+### Multi Container Pod Patters
+
+There are 3 multi container pod patters:
+1. Sidecar
+2. Adapter
+3. Ambassador
+
+### Init Containers
+
+Consider the case where you have a container that needs to wait for something to happen before it is initiated. Examples of this would be such as:
+- Loading dependencies from another repository
+- Ensuring some other service in some other pod is ready
+etc. 
+
+There could be multiple such dependencies that need to execute before the actual container execution begins. 
+
+By default kubernetes sees all the containers running inside the pod and continues to kill and restart the pod till all the containers inside it are running succesfully. But in the case described above, the containers would be short lived. Such containers that must run with the actual application container but are somewhat like dependencies to the primary container can be defined in the pod definition in the InitContainers section of the pod definition. It's an array parallel to and similar the contintainers list in the definition. These init containers are executed sequentially one at a time and must finish in order for the primary container(s) to begin executing. 
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: my-pod
+spec:
+  - containers:
+    - name: my-container
+      image: image-name
+  - initContainers:
+    - name: myapp-init
+      image: busybox
+      command: ['sh','-c','git clone <repo containing dependencies>; done;']
+```
+

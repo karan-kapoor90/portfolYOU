@@ -29,5 +29,22 @@ $ kubectl run --generator=run-pod/v1 <pod_name> --image=<image_name> --labels="<
 ```bash
 $ kubectl create deployment --image=<container_image> <deployment_name>     # Currently this doesn't allow you to define the number of replicas in the command itself.
 
-$ kubectl scale deployment/<deployment_name>
+$ kubectl scale deployment/<deployment_name> --replicas=<desired_number of replicas>        # This does not edit the actual yaml file for the deployment, hence copying the file to different environment would produce the original number of pods. A better way to do this is to use kubectl edit to edit the deployment file.
 ```
+
+## Secret 
+
+```bash
+$ kubectl create secret generic <secret-name> --from-literal=<key-name>=value --from-literal=<key-name>=<value>
+```
+
+## ConfigMap
+
+```bash
+# from the CLI
+$ kubectl create configMap <config-name> --from-literal=<key-name>=<value> --from-literal=<key-name>=<value>
+
+# using a properties file
+$ kubectl create configMap <config-name> --from-file=configFile.properties
+```
+
