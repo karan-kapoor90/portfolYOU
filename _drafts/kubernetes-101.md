@@ -41,7 +41,6 @@ type: Pod
 > One of the major differences b/w replication controller and the replicaSet is the selector label. Selector labels help the replicaset control pods that weren't created using the template inside the RS definition. The Selector label is an optional component in the RC. 
 rc are available in apiVerision v1, while rs is available in apps/v1.
 
-Som 
 
 #### Useful Commands
 
@@ -99,7 +98,7 @@ the labels under the matchlabels section must match the pods labels and not the 
 
 ### Deployment
 
-
+A deployment is a superset to a replicaSet. While a replicaSet creates a unit that allows for recreation of dead pods, the service to expose them etc. still needs to be created manually. Deployments are now the standard way of creating pods. A deployment automatically creates the replication set, a deployment, the service and the pods. 
 
 ### Namespaces
 
@@ -110,25 +109,27 @@ default: a default namespace
 
 
 Switch your current context to a different namespace
-$ kubectl config set-context $(kubectl config current-context) --namespace=<namespace_name>
 
+```bash
+$ kubectl config set-context $(kubectl config current-context) --namespace=<namespace_name>
+```
 
 ### Services
 
-Nodeport: makes container port available on the node's physical port
-ClusterIp: Service creates a virtual IP inside the cluster to enable inter container communication.
-LoadBalancer: use a cloud provider's nodeport
+**Nodeport**: makes container port available on the node's physical port
+
+**ClusterIp**: Service creates a virtual IP inside the cluster to enable inter container communication.
+
+**LoadBalancer**: use a cloud provider's nodeport
+
+- TargetPort: the port on which the pod is exposing what's running inside it.
+
+- Port: this is the service port. think of the service as a virtual server. Inside the cluster it has its own cluster address called the service's cluster IP
+
+- NodePort: A valid port in the 30000-32767 port range on the host machine.
 
 
-
-
-NodePort: 
-TargetPort: the port on which the pod is exposing what's running inside it.
-Port: this is the service port. think of the service as a virtual server. Inside the cluster it has its own cluster address called the service's cluster Ip
-NodePort: A valid port in the 30000-32767 port range on the host machine.
-
-
-Uses a "Random" Algorithm. It makes the same port on all nodes available as the outbound port for the service.
+By default, k8s uses a "Random" Algorithm. It makes the same port on all nodes available as the outbound port for the service.
 
 ```yaml
 apiVersion: v1
@@ -148,9 +149,7 @@ spec:
 ```
 
 
-
-ClusterIp: the right method for establishing internal communication between pods. This basically gives a single interface/ internal IP address for other pods to access the service. Uses " Random" algorithm.
-
+**ClusterIp**: the right method for establishing internal communication between pods. This basically gives a single interface/ internal IP address for other pods to access the service. Uses " Random" algorithm.
 
 
 ```yaml
@@ -170,33 +169,27 @@ spec:
       type: something
 ```
 
-Important: to create a dummy template yaml file than can be used to fill up with more specific details before actually using out the file, use the following:
+> Important: to create a dummy template yaml file than can be used to fill up with more specific details before actually using out the file, use the following:
 
 
-kubectl create deployment --image=nignx nginx --dry-run -o yaml > myDescriptor.yaml
 
+#### Expose pod as a service
 
-To create a pod, one has to use the generator to create it directly from the CLI. Use the following command
+```bash
+$ kubectl expose pod <podname> --port=<portnumber> --name=<service-name>  //automatically uses the pod's selectors for the service.
+```
 
+#### Create a deployment 
 
-kubectl run --generator=run-pod/v1 nginx --image=nginx --labels="app=test" --dry-run -o yaml
+```bash
+$ kubectl create deployment --image=<imagename> <deployment-name>
+```
 
+> Note that this command doesn't allows you to define the number of replicas. You will either need to create the file or use the scale command
 
-Expose pod as a service
-
-
-kubectl expose pod <podname> --port=<portnumber> --name=<service-name>  //automatically uses the pod's selectors for the service.
-
-
-Create a deployment 
-
-
-$ kubectl create deployment --image=<imagename> <deployment-name>    // Note that this command doesn't allows you to define the number of replicas. You will either need to create the file or use the scale command
+```bash
 $ kubectl scale deployment/<deployment_name> --replicas=4    //note that the scale command doesn't update the underlying yaml with the latest number of replicas in the deployment.
-
-
-
-
+```
 
 
 ### Kubernetes Scheduler

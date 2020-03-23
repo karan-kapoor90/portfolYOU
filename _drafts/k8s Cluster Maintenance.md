@@ -61,3 +61,67 @@ $ systemctl restart kubelet
 $ kubectl uncordon <node-name>
 ```
 
+## Backup and restore
+
+### Resource Configuration
+
+#### Resource Configurations
+
+You must back up resources created using both declarative and imperative methods.
+
+```bash
+$ kubectl get all --all-namespaces -o yaml > all-resources.yaml
+```
+
+> Vellero can help taking a backup as well.
+
+#### Etcd resource
+
+Etcd has details of all the configurations on the server. Etcd is deployed on the master node. The data directory of the Etcd service has the path for all the congurations in the server and is hence what should be backed up.
+
+``` etcd.service --data-dir
+
+Etcd also has a built in utility for taking a snapshot of the etcd database. 
+
+**Backup**
+
+```bash
+$ ETCDCTL_API=3 etcdctl snapshot save snapshot.db
+```
+
+**Restore**
+
+1. Stop the apiserver
+
+```bash
+$ service kube-apiserver stop
+```
+
+2. Restore using the etcd server restore utility
+
+```bash
+$ ETCDCTL_API=3 etcd snapshot restore snapshot.db \
+--data-dir /var/lib/etcd-from-backup \ # path to the new data directory to be created. This is where the new data will be for this restored database
+--initial-cluster master1:https://<master1-ip-address>:2380,master2=https://<master1-ip-address>:2380 \ # master node communication addresses
+--initial-cluster-token <target-cluster-token> 
+```
+
+> When etcd triggers a restore it initialises a new cluster configuration and configures the members of etcd as new members to a new cluster. This is to prevent a new member from accidentally joining an existing cluster. For example when you're setting up a new test cluster with the production cluster configration, this will ensure that the new members don't accidentally join the production cluster.
+
+3. Pointing the running etcd service to the new restored configuration
+
+Update the etcd.service --data-dir and the --initial-cluster-token to point to the new configuration. Then restart the etcd service as follows:
+
+```bash
+$ systemctl daemon-reload
+$ service etcd restart
+
+```
+
+4. Restart the API service
+
+```bash
+$ service kube-api-service restart
+```
+
+> With all etcdctl commands, you must specify the --endpoint=<etcd-service-address> --cacert=/etc/etcd/ca.crt --cert=/etc/etcd/etcd-server.crt --key=/etc/etcd/etcd-server.key
