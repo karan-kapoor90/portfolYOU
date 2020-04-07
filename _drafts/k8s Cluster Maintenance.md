@@ -1,3 +1,12 @@
+---
+title: Kubernetes Cluster Management
+tags: [kubernetes, cloud native, upgrade, administration]
+style: 
+color: 
+description: A guide to upgrading and maintaining your kubernetes clusters
+---
+
+
 # Worker Node OS upgrades
 
 If you create and deploy pods, and the node on which they're running goes down, k8s waits for a default timeout of 5 mins for the nodes to come back up. If it doesn't come back up, the pods are terminated and k8s considers them dead. If the pods are a part of a replica set thne they're recreated on other nodes. The time that k8s waits for a pod to come back online is called `pod eviction timeout` and it's set on the `kubernetes controller manager`. This is 5 mind by default. If the node comes back up after 5 mins, it comes back online as empty and the pods aren't recreated. 
@@ -79,7 +88,7 @@ $ kubectl get all --all-namespaces -o yaml > all-resources.yaml
 
 Etcd has details of all the configurations on the server. Etcd is deployed on the master node. The data directory of the Etcd service has the path for all the congurations in the server and is hence what should be backed up.
 
-``` etcd.service --data-dir
+`etcd.service --data-dir`
 
 Etcd also has a built in utility for taking a snapshot of the etcd database. 
 

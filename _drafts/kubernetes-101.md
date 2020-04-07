@@ -50,19 +50,12 @@ rc are available in apiVerision v1, while rs is available in apps/v1.
   `$ kubectl get po <pod_name> -o wide`
 - Watch the get pods command for changes to pods
   `$ kubectl get po <pod_name> -w`
-- Imperatively create a pod directly from the command line without using a yaml file
-  ```bash
-  $ kubectl run --generator=run-pod/v1 <pod_name> --image=<image_name> --labels="<key>=<value>" --dry-run -o yaml > newfile.yaml
-  # --dry-run : Shows the outcome of the command but doesn't execute it at all
-  # --labels : adds the labels to the pod that will be created
-  # -o yaml : Outputs the resource definition that is going to be created in a yaml format
-  # > newfile.yaml : writes the output (the yaml contents in this case) to newfile.yaml
-  ```
+- Imperatively way - refer to kubernetes CLI resource creation guide
 - Get pods by specific labels
-  `$ kubectl get po --selector <key>=<value>  # instead of usign --selector, you can also use -l`
+  `$ kubectl get po --selector <key>=<value> `  # instead of usign --selector, you can also use -l
 
 - Edit a pod
-  `$ kubectl edit pod <podname>     # you cannot however edit some of the properites for a pod at runtime such as the resource utilization, env vars, service accounts etc.`
+  `$ kubectl edit pod <podname>`     # you cannot however edit some of the properites for a pod at runtime such as the resource utilization, env vars, service accounts etc.
   * export the pod definition to a yaml file, make changes and then delete the pod and recreate using the modified yaml file. A better option is to put the pod into a deployment and editing the deployment file since the pod spec is a child of the deployment. 
 
 ### ReplicaSet
@@ -100,6 +93,32 @@ the labels under the matchlabels section must match the pods labels and not the 
 
 A deployment is a superset to a replicaSet. While a replicaSet creates a unit that allows for recreation of dead pods, the service to expose them etc. still needs to be created manually. Deployments are now the standard way of creating pods. A deployment automatically creates the replication set, a deployment, the service and the pods. 
 
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-deployment
+  label:
+    app: backend
+spec:
+  replicas: 5
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      name: my-pod
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend-container
+        image: my-image
+        ports:
+        - containerPort: 80   # tells the container which port to expose
+
+```
+
 ### Namespaces
 
 Namespace service Address: <namespace>.svc.cluster.local
@@ -122,11 +141,11 @@ $ kubectl config set-context $(kubectl config current-context) --namespace=<name
 
 **LoadBalancer**: use a cloud provider's nodeport
 
-- TargetPort: the port on which the pod is exposing what's running inside it.
+- `TargetPort`: the port on which the pod is exposing what's running inside it. So for example if the service inside the container is an httpd server hosting a page on the default port 80, the TargetPort would be port 80.
 
-- Port: this is the service port. think of the service as a virtual server. Inside the cluster it has its own cluster address called the service's cluster IP
+- `Port`: this is the service port. think of the service as a virtual server. Inside the cluster it has its own cluster address called the service's cluster IP. 
 
-- NodePort: A valid port in the 30000-32767 port range on the host machine.
+- `NodePort`: A valid port in the 30000-32767 port range on the host machine.
 
 
 By default, k8s uses a "Random" Algorithm. It makes the same port on all nodes available as the outbound port for the service.
@@ -176,7 +195,7 @@ spec:
 #### Expose pod as a service
 
 ```bash
-$ kubectl expose pod <podname> --port=<portnumber> --name=<service-name>  //automatically uses the pod's selectors for the service.
+$ kubectl expose pod <podname> --port=<portnumber> --name=<service-name> --type=NodePort  //automatically uses the pod's selectors for the service.
 ```
 
 #### Create a deployment 
