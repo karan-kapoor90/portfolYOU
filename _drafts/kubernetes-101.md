@@ -6,14 +6,23 @@ color:
 description: A primer guide with commands and syntax for kubernetes
 ---
 
-## Kubernetes Master Plane Components
+## Kubernetes Components
+
+### Master Node Components
 
 1. etcd - key value store that holds all the data about the cluster, the pods, containers, versions, deployment times etc. Default port 2379
 2. kube-scheduler - the component that manages deployment of containers on a node, identifies the right node as per the policies etc.
-3. Controllers - monitors the state of resources and works to bring them to the desired state
+3. api-server - This is the API server that provides the internal and external interface for clients to talk to Kubernetes. This component is called everytime you fire a command from the cli, the dashboard, and is even used by internal components for sharing and receiving the latest configurations of the cluster.
+4. Controllers - monitors the state of resources and works to bring them to the desired state
    - Node Controller - Node status - monitors nodes every 5 seconds; waits for 40 seconds before markingit unreachable. 5 mins wait after that for machine to come back. Then it'll remove pods from node
    - Replication Controller 
+   - Cloud Controllers
 
+
+### Worker Node Components
+
+1. kubelet - This is a process that runs on every worker node of the cluster, with the singlular capability of running pods and setting up the basic necessities such as the storage, networking and compute runtime required by the containers.
+2. kube-proxy - this is a proxy server that runs on every node and does simple or round robin TCP, UDP or SCTP forwarding between the incoming traffic and the backend set running on the node. 
 
 ## Resources
 
@@ -25,16 +34,16 @@ Pod definition default yaml vars:
 ```yaml
 apiVersion: v1
 type: Pod
-    metadata:
-        name: <pod_name>
-        label:
-            app: something
+  metadata:
+    name: <pod_name>
+    label:
+      app: something
     spec:
-        containers:
-            - name: <somename_for_container>
-              image: karankapoor/container_name
-              ports:
-                -  containerPort: 8080
+      containers:
+        - name: <somename_for_container>
+          image: karankapoor/container_name
+          ports:
+          -  containerPort: 8080
           
 ```
 
@@ -64,25 +73,25 @@ rc are available in apiVerision v1, while rs is available in apps/v1.
 ```yaml
 apiVersion: apps/v1
 type: ReplicaSet
-    metadata:
-        name: <Replicaset_name>
+  metadata:
+    name: <Replicaset_name>
+    label:
+      app: something
+  spec:
+    replicas: <number_of_base_replicas>
+    selector: 
+      matchLabels:
+        app: something
+    template:
+    # Copy the pod definition here
+      metadata:
+        name: <pod_name>
         label:
-            app: something
-    spec:
-        replicas: <number_of_base_replicas>
-        selector: 
-            matchLabels:
-                app: something
-        template:
-            # Copy the pod definition here
-            metadata:
-                name: <pod_name>
-                label:
-                    app: something
-            spec:
-                containers:
-                    - name: <somename_for_container>
-                    image: karankapoor/container_name
+          app: something
+      spec:
+        containers:
+        - name: <somename_for_container>
+          image: karankapoor/container_name
 ```
 
 

@@ -10,3 +10,7 @@ Gemfile.lock
 
 # Photoshop Documents
 Preview.psd
+
+.DS_Store
+.DS_Store?
+.vscode/

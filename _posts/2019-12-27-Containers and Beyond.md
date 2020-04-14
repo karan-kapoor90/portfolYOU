@@ -145,4 +145,7 @@ Serverless as the name suggests isn't really a no server architecture. Instead s
 
 This virtually eliminates the need to provision infrastructure and pay for even when you're not using it, ushering an era of solutions that deliver blazing fast solutions, at scale, at minimal charges. 
 
-But like we all know, with great power comes great responsibility and Serverless ain't no saint... but that's a post for another time!
+But like we all know, with great power comes great responsibility and Serverless ain't no saint... but that's a post for another time! 
+
+
+

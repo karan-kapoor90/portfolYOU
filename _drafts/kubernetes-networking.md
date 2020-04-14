@@ -338,3 +338,183 @@ In order to avoid this situation, you can use the ingress controller inside the 
 
 > BY DEFAULT, KUBERNETES CLUSTERS DON'T COME WITH AN INGRESS CONTROLLER.
 
+Ingress solutions are :
+- GCE (Google's solution)
+- Nginx
+- Contour
+- HAproxy
+- Istio
+
+> GCE and Nginx are currently being supported and maintained by Linux Foundation.
+
+These are not just LB's but also have intelligence to automatically add resources into them as well. Nginx is also deployed as a deployment on your cluster, fronted by a NodePort service.
+
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-configuration
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-ingress-controller
+  labels:
+    tier: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: nginx-ingress
+  template:
+    metadata:
+      labels:
+        name: nginx-ingress
+    spec:
+      containers:
+        - name: nginx-ingress-controller
+          image:  quay.io/kubernetes-ingress-controller/nginx-ingress-controller:0.21.0
+          args:
+          - /nginx-ingress-controller
+          - --configmap=$(POD_NAMESPACE)/nginx-configuration
+          env:
+          - name: POD_NAME
+            valueFrom: 
+              fieldRef: 
+                fieldPath: metadata.name
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldref:
+                fieldPath: metadata.namespace
+          ports:
+          - name: http
+            containerPort: 80
+          - name: https
+            containerPort: 443
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-service
+spec:
+  type: NodePort
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+    protocol: TCP
+  - name: https
+    port: 443
+    targetPort: 443
+    protocol: TCP
+  selector:
+    name: nginx-ingress
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: nginx-ingress-serviceaccount
+```
+
+But in order for the ingress controller to automatically enroll new pod instances for the load balancing, it needs a ServiceAccount which it uses to control k8s resources. The serviceAccount needs to be created with the correct Role and RoleBindings.
+
+The part of the ingress controller that defines all the routing rules is called the ingress resource. 
+
+In summary, the components used to run and configure an ingress controller to loadbalance basis defined rules, the components required are:
+
+- nginx-configuration - the configuration file for the nginx-ingress-controller, deployed to a particular namespace.
+- nginx-ingress-deployment - the actual nginx-ingres-controller deployment which deploys the nginx pods in the namespace
+- nginx-service - NodePort service to expose the nginx deployment pods
+- nginx-serviceaccounts - to provide access to the kubernetes resources to nginx pods
+- nginx-resource - can do routing based on domain name or URL
+
+```yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: <resource-name>-ingress
+spec:
+  tls:   # Not mandatory, required only if configuring tls
+  - hosts:
+    - <hostname>
+    secretName: <secret-name-containing-certificate>
+  backend: # for a basic routing to backend without any rules
+    serviceName: <app-service-name>
+    servicePort: <app-service-port>
+```
+
+Let's assume a scenario where we want to setup the following configs
+
+Configuration for routes under the same domain:
+- www.mywebsite.com
+  - /wear
+  - /store
+
+Configure for subdomains
+- www.wear.mywebsite.com
+  - /categories
+  - /reviews
+- www.store.mywebsite.com
+
+> So, an ingress controller can be used on routes on the same domain an subdomains, but can the same ingress resource be used to redirect to different domain names?
+
+> Seems like the default backend service cannot be changed easily. You have to create a backend service in the name specified by the ingress description `kubectl describe ingress <ingress-name>`
+
+```yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-resource
+spec:
+  rules:
+  - http:
+    paths:
+    - path: /wear
+      backend:
+        serviceName: wear-service
+        servicePort: 80
+    - path: /store
+      backend:
+        serviceName: store-service
+        servicePort: 80
+```
+For configuring subdomains:
+
+```yaml
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-resource
+  annotations: nginx.ingress.kubernetes.io/rewrite-target: /   # Described below, nginx specific feature
+spec:
+  rules:
+  - host: wear.mywebsite.com
+    http:
+      paths:
+      - path: /categories   # Notice, the subdomain also has a path under it specified explicitly
+        backend:
+          serviceName: categories-service
+          servicePort: 80
+      - path: /reviews
+        backend:
+          serviceName: reviews-service
+          servicePort: 80
+  - host: store.mywebsite.com
+    http:
+      paths:   # Notice, the path property is missing because we want all subroutes under store to continue routing to this service only
+      - backend:
+        serviceName: store-service
+        servicePort: 80
+```
+
+The nginx-rewrite property is what ensures that the url route is not pasted at the end of the destination route. For example:
+
+Without nginx rewrite-target:
+
+`https://<ingress-ip>.<port>/watch --> https://<watch-service>:<service-port>/watch`
+
+But since the `watch` path is not present in the actual application, it shouldn't really be there at the end of the URL.
+
+With nginx rewrite target:
+
+`https://<ingress-ip>.<port>/watch --> https://<watch-service>:<service-port>/`
