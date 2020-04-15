@@ -126,13 +126,13 @@ node index.js
 ```bash
 export DOCKER_USERNAME=<your-dockerhub-username>
 # building your container locally
-docker build -t $DOCKER_USERNAME/docker-workshop
+docker build -t $DOCKER_USERNAME/docker-workshop .
 ```
 
 10. Run the container locally, exposing the app on port 30000 of your local host machine
 
 ```bash
-docker run -d -e PORT=30000 --name my-app $DOCKER_USERNAME/docker-workshop:latest
+docker run -d -p 30000:3000 --name my-app $DOCKER_USERNAME/docker-workshop:latest
 
 # inspect the docker container running in the background
 docker ps
@@ -147,6 +147,11 @@ http://localhost:30000/hello   # a GET endpoint that responds with a hello in pl
 
 ```
 
+12. Clean up
+
+```bash
+docker container stop $(docker container ls -aq)   # Stop all running containers
+```
 
 Now you're a champ! But why stop here? If you installed docker desktop for your platform, most likely, you also have a local distribution of kubernetes running on your machine.
 
