@@ -18,10 +18,17 @@ Before diving into CLI commands to create specific k8s resources, some of the fo
 
 -o yaml > somefile.yaml : Same as the previous command, simply writes the output to 'somefile.yaml'. Use wil --dry-run can be extremely useful to get started with writing a yaml file for a resources instead of typing it out from scratch.
 
+-o=jsonpath={.spec.containers[*].image} : to get images of all containers inside a pod
+
+--show-labels : show labels when getting resources
+
 ## Pod
 
 ```bash
 $ kubectl run --generator=run-pod/v1 <pod_name> --image=<image_name> --labels="<key>=<value>"
+# or
+$ kubectl run <pod-name> --image=<imagename> --generator=pod-run/v1
+
 ```
 
 ## Deployment

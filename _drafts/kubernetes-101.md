@@ -296,7 +296,7 @@ $ kubectl taint node <node_name> <key>=<value>:<taint_effect>
 3. NoExecute - No new pods will be scheduled; existing pods if they don't have a toleration towards the taint, will be gracefull evicted.
 
 Example command:
-`$ kubectl taint node node1 app=blue :NoSchedule`
+`$ kubectl taint node node1 app=blue:NoSchedule   # Note the absence of the space and the taints key=value pair`
 
 To add tolerations to a pod, add tolerations to the spec section in the pods definition as follows:
 
@@ -402,7 +402,7 @@ kind: Pod
                     - matchExpressions:  # This will ensure that the pod is scheduled on the node that matches ALL the key value pair conditions in the matchExpressions
                         - key: <somekey>
                           operator: In # In case you use Exists, you do not neceseily need to give a value because it'll check if the key itself exists.
-                          value: 
+                          values: 
                           - somevalue1
                           - soevalue2           
 ```
