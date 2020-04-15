@@ -155,4 +155,4 @@ docker container stop $(docker container ls -aq)   # Stop all running containers
 
 Now you're a champ! But why stop here? If you installed docker desktop for your platform, most likely, you also have a local distribution of kubernetes running on your machine.
 
-For more info on why you should consider orchestrating your container using kubernetes, and a basic how-to, follow the guide [here](% post_url kubernetes_workshop %).
+For more info on why you should consider orchestrating your container using kubernetes, and a basic how-to, follow the guide [here](% post_url 2020-04-16-kubernetes-workshop %).
