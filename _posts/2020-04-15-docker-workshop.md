@@ -109,7 +109,7 @@ This is a very basic, 20 minute quick guide to running your first docker contain
 7. Login to github and pull the following repository:
 
     ```bash
-    git clone <git-url>
+    git clone https://github.com/karan-kapoor90/docker-workshop.git
 
     # consider running the application locally if you have node installed on your machine
     npm install
@@ -162,4 +162,4 @@ This is a very basic, 20 minute quick guide to running your first docker contain
 
 Now you're a champ! But why stop here? If you installed docker desktop for your platform, most likely, you also have a local distribution of kubernetes running on your machine.
 
-For more info on why you should consider orchestrating your container using kubernetes, and a basic how-to, follow the guide [here](% post_url 2020-04-16-kubernetes-workshop %).
+For more info on why you should consider orchestrating your container using kubernetes, and a basic how-to, follow the guide [here](kubernetes-workshop).
