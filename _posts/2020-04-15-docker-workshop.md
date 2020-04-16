@@ -44,15 +44,17 @@ This is a very basic, 20 minute quick guide to running your first docker contain
     docker run -it busybox sh
     ```
 
-Now try 
+    Now try 
 
     ```bash
     whoami
     ```
 
-Surprise surprise!! You're root!! But wait, if I'm root now, can't I do anything? I mean *ANYTHING* !! Let's try something crazy!! 
+    Surprise surprise!! You're root!! But wait, if I'm root now, can't I do anything? I mean *ANYTHING* !! Let's try something crazy!! 
 
-> PS: Make sure you're still inside the container, you DON'T want to do this on your machine.
+    > PS: Make sure you're still inside the container, you DON'T want to do this on your machine.
+
+
 
     ```bash
     ls 
@@ -67,9 +69,9 @@ Surprise surprise!! You're root!! But wait, if I'm root now, can't I do anything
     exit
     ```
 
-However, once outside of the container, try `ls` and `uptime` again (if you're on a linux/ mac that is..), and they're still working..
+    However, once outside of the container, try `ls` and `uptime` again (if you're on a linux/ mac that is..), and they're still working..
 
-Voila! Docker isolation in action!!
+    Voila! Docker isolation in action!!
 
 ### Serving a static webpage
 
