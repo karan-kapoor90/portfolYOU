@@ -161,7 +161,11 @@ Docker containers can have the following network options:
 2. Host: Use the hosts ethernet network, meaning that if the container exposes an app on port 80 and the networking is set to host, the app will be exposed on port 80 of the host. 
 3. Bridge: By default docker creates a network on a host called a bridge network, and all the containers on that host are connected to that bridge network. This is the default networking mode of containers if nothing is specified. This interface for this network is called `docker0` on the host machine. 
 
-Internally, docker creates a new network namespace for each container and connecst them using the bridge network.
+Internally, docker creates a new network namespace for each container and connects them using the bridge network.
+
+```bash
+$ docker run --network=host --name my-contianer <image-name>
+```
 
 ## CNI - Container Network Interface
 

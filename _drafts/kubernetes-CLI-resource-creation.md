@@ -31,6 +31,16 @@ $ kubectl run <pod-name> --image=<imagename> --generator=pod-run/v1
 
 ```
 
+A pod can be exposed outside on a host port by port forwarding as follows:
+
+```bash
+$ kubectl port-forward deploy/pod/replicaset/service <resource-name> <host-port>:<resource-port>
+
+# for example
+
+$ kubectl port-forward pod my-nginx-pod 8080:80
+```
+
 ## Deployment
 
 ```bash
