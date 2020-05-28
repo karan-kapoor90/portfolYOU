@@ -22,7 +22,7 @@ I typically work in areas concerning
 * Hyperledger Fabric 
 * Full stack web technology 
 
-![OCI Certification 2018](https://karankapoor.s3.ap-south-1.amazonaws.com/OCICert.JPG "Certification Image")
+![OCI Certification 2018](/assets/oci.png "Certification Image")
 
 <div class="row">
 {% include about/skills.html title="Programming Skills" source=site.data.programming-skills %}
