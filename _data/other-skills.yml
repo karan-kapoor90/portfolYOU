@@ -1,5 +1,5 @@
 - name: Architecture Design
-  percentage: 95
+  percentage: 80
   color: info
 
 - name: Pre-Sales
@@ -10,6 +10,6 @@
   percentage: 85
   color: danger
 
-- name: Data Analysis
-  percentage: 75
+- name: Evangelism
+  percentage: 85
   color: primary

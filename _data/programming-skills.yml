@@ -1,4 +1,4 @@
-- name: Oracle SOA 12c
+- name: Kubernetes
   percentage: 90
   color: danger
 
@@ -6,10 +6,10 @@
   percentage: 80
   color:
 
-- name: Docker & K8s
+- name: Middleware
   percentage: 85
   color: dark
 
-- name: Cloud Native
+- name: Microservices
   percentage: 75
   color: primary
