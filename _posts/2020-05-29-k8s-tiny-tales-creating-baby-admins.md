@@ -170,6 +170,7 @@ $ export KUBECONFIG=$KUBECONFIG:$(pwd)/dev-config
 $ kubectl config use-context john@dev-cluster
 ```
 
-Now, if John tried to create a resource in any other namespace, he will not have the permission to, but we be the king of his little namespace :-)
+Now, if John tried to create new resources in any other namespaces, he'd be denied, but would be the king of his own namespace :-)
+
 
 Stay tuned for more kubernetes tiny tales.
