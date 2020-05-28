@@ -11,7 +11,7 @@ remote_theme       : karan-kapoor90/portfolYOU    # uncomment this if you are us
 ### Author Info ###
 author:
   name              : Karan Kapoor
-  image             : https://karankapoor.s3.ap-south-1.amazonaws.com/me.jpg
+  image             : "/assets/me.jpg" #https://karankapoor.s3.ap-south-1.amazonaws.com/me.jpg
 #  behance           : your_username
 # dribbble          : your_username
   email             : karan.kapoor.work@gmail.com
