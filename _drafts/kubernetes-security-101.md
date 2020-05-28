@@ -152,11 +152,11 @@ $ openssl req -new -key admin.key -subj "/CN=<username>" -out admin.csr
 $ openssl x509 -req -in admin.csr -CA ca.crt -CAkey ca.key -out admin.crt
 ```
 
-> Note that the grpups to which the user would belong would also be based on the certificates. A user's group can be specified while creating the Certificate Signing Request in the subject using the /O parameter as `opessl -req -new -key karan.key -subj "/CN=karan.kapoor/O=system:masters" -out karan.csr` . system:masters is a k8s group.
+> Note that the groups to which the user would belong would also be based on the certificates. A user's group can be specified while creating the Certificate Signing Request in the subject using the /O parameter as `opessl -req -new -key karan.key -subj "/CN=karan.kapoor/O=system:masters" -out karan.csr` . system:masters is a k8s group.
 
-3. Server certificates. In order for the server to respect and identify the CA as an autohorized one, the CA's root certificate needs to be available to the server components.  
+3. Server certificates. In order for the server to respect and identify the CA as an authorized one, the CA's root certificate needs to be available to the server components.  
 
-Taking an example of the kube-api server, everyone talks to the kube-apiserver and for multiple reasons it may be references using various different names such as simply kubernetes, kubernetes.default, kubernetes.default.svc, kubernetes.default.svc.cluster.local, master node IP or the docker container's IP where it is running. The point is, all of the names that may be used by applicaitons or admins to interact with the API server needs to be avialble in the certificate otherwise the requets will not be accepted. This needs alot of names to be configured for the server and can be done with the help of a cnf configuration file where we'll give all the alternate names for the service.
+Taking an example of the kube-api server, everyone talks to the kube-apiserver and for multiple reasons it may be references using various different names such as simply kubernetes, kubernetes.default, kubernetes.default.svc, kubernetes.default.svc.cluster.local, master node IP or the docker container's IP where it is running. The point is, all of the names that may be used by applications or admins to interact with the API server needs to be avialble in the certificate otherwise the requets will not be accepted. This needs alot of names to be configured for the server and can be done with the help of a cnf configuration file where we'll give all the alternate names for the service.
 
 - Generate the private key
 
@@ -164,7 +164,7 @@ Taking an example of the kube-api server, everyone talks to the kube-apiserver a
 $ openssl genrsa -out apiserver.key 2048
 ```
 
-- Create the certificate signing request, but pass the configuration for the varios names for the server
+- Create the certificate signing request, but pass the configuration for the various names for the server
 
 ```bash
 $ openssl req -new -key apiserver.key -subj "/CN=kube-apiserver" -out apiserver.csr -config openssl.cnf
@@ -176,7 +176,7 @@ req_extensions = v3_req
 [ v3_req ]
 basicConstraints = CA:FALSE
 keyUsage = nonRepudiation
-subjectltName = @alt_names
+subjectAltName = @alt_names
 [ alt_names ]
 DNS.1 = kubernetes
 DNS.2 = kubernetes.default
@@ -322,16 +322,16 @@ metadata:
   name: jane
 spec:
   groups:
-  - sytem:authenticated
+  - system:authenticated
   usages:
   - digital signature
   - key encipherment
-  - erver auth
+  - server auth
   request:
       <convert the file received from jane, jane.csr to base64 and put the contents here without any quotes etc. Convert using cat jane.csr|base64>
 ```
 
-This can then applied into the environemnt. Admins can view these requests using the following command:
+This can then applied into the environment. Admins can view these requests using the following command:
 
 ```bash
 $ kubectl get csr
@@ -381,7 +381,7 @@ spec:
 
 ## Kube config
 
-In order to access a clsuter, if using curl, you'd need the apiserver URL and port, the user's key, certificate and the CA's certificate like so
+In order to access a cluster, if using curl, you'd need the apiserver URL and port, the user's key, certificate and the CA's certificate like so
 
 ```bash
 $ curl https://<api-server-ip>:6443/api/v1/pods --key <user-key-file> --cert <user-certificate-file> --cacert <ca-crt-file>

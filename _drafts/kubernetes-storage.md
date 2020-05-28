@@ -105,7 +105,7 @@ spec:
 
 ### Persistent Volumes on a Multi-node Cluster
 
-In the case of a multi-node cluster, the pod may be created on any of the nodes, and the data must persist on the storage while seeming the same to all the pods on the cluster. Ideally, the admin would want to create a single large pool such that comnsussmers can then cut out a portion for them and use it for their pods. Also the configuration and management of these volume mounts should be simpler, in the sense that if they were defined in the pod definition file like earlier, making changes would mean modifying all the pod definitions individually which would be extremely tedious.
+In the case of a multi-node cluster, the pod may be created on any of the nodes, and the data must persist on the storage while seeming the same to all the pods on the cluster. Ideally, the admin would want to create a single large pool such that consumers can then cut out a portion for them and use it for their pods. Also the configuration and management of these volume mounts should be simpler, in the sense that if they were defined in the pod definition file like earlier, making changes would mean modifying all the pod definitions individually which would be extremely tedious.
 
 Volumes can be mounted in one of 3 modes:
 - ReadWriteOnce

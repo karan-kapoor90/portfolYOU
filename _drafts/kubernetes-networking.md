@@ -383,13 +383,9 @@ spec:
           - --configmap=$(POD_NAMESPACE)/nginx-configuration
           env:
           - name: POD_NAME
-            valueFrom: 
-              fieldRef: 
-                fieldPath: metadata.name
+            value: nginx-ingress-controller
           - name: POD_NAMESPACE
-            valueFrom:
-              fieldref:
-                fieldPath: metadata.namespace
+            value: defaults
           ports:
           - name: http
             containerPort: 80
@@ -401,7 +397,7 @@ kind: Service
 metadata:
   name: nginx-service
 spec:
-  type: NodePort
+  type: LoadBalancer
   ports:
   - name: http
     port: 80
@@ -437,6 +433,8 @@ apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
   name: <resource-name>-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
 spec:
   tls:   # Not mandatory, required only if configuring tls
   - hosts:

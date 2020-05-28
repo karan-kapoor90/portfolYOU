@@ -47,8 +47,6 @@ type: Pod
           
 ```
 
-> One of the major differences b/w replication controller and the replicaSet is the selector label. Selector labels help the replicaset control pods that weren't created using the template inside the RS definition. The Selector label is an optional component in the RC. 
-rc are available in apiVerision v1, while rs is available in apps/v1.
 
 
 #### Useful Commands
@@ -67,8 +65,8 @@ rc are available in apiVerision v1, while rs is available in apps/v1.
   `$ kubectl edit pod <podname>`     # you cannot however edit some of the properites for a pod at runtime such as the resource utilization, env vars, service accounts etc.
   * export the pod definition to a yaml file, make changes and then delete the pod and recreate using the modified yaml file. A better option is to put the pod into a deployment and editing the deployment file since the pod spec is a child of the deployment. 
 
-### ReplicaSet
 
+### ReplicaSet
 
 ```yaml
 apiVersion: apps/v1
@@ -97,10 +95,43 @@ type: ReplicaSet
 
 the labels under the matchlabels section must match the pods labels and not the rs labels because these are used by the rs to determine which pods to control.
 
+#### ReplicaSet vs. ReplicationController
+
+> One of the major differences b/w replication controller and the replicaSet is the selector label. Selector labels help the replicaset control pods that weren't created using the template inside the RS definition. The Selector label is an optional component in the RC. 
+rc are available in apiVerision v1, while rs is available in apps/v1. Here's a difference from a selector perspective.
+
+```yaml
+# replicationController - this is the old contructor that only has an equal to operand such that the key and value should match exactly
+apiVersion: v1
+spec:
+  selector:
+    app: frontend  #  the label on the pod must be an exact match
+
+# replicaSet - this is the newer constructor, now replaced by a deployement. This allows for using operators in the selection of pods to be controlled by the set
+apiVersion: apps/v1
+spec:
+  selector:
+    matchLabels:
+      app: frontend
+    matchExpressions:
+    - key: app  #   The value of the app label could be any pf frontend or blue
+      operator: In
+      values:
+        - frontend
+        - blue
+    - key: tier  # The value of the tier label on the pod should neither be production nor UAT
+      operator: NotIn
+      values:
+      - production
+      - UAT 
+```
+
 
 ### Deployment
 
-A deployment is a superset to a replicaSet. While a replicaSet creates a unit that allows for recreation of dead pods, the service to expose them etc. still needs to be created manually. Deployments are now the standard way of creating pods. A deployment automatically creates the replication set, a deployment, the service and the pods. 
+A deployment is a superset to a replicaSet. While a replicaSet creates a unit that allows for recreation of dead pods, the service needed to expose them etc. still needs to be created manually. Deployments are now the standard way of creating pods. A deployment automatically creates the replication set, a deployment, and the pods. 
+
+Deployment also help with rollout and rollbacks of pods. A Deployment internally creates a replicaSet for the deployment of the pods. When a new rollout is created, the deployment creates a new ReplicaSet and replaces the old pods with new ones as per the new replicaSet based out on the rolloutStrategy. When you roll a release back, the deployment uses the rollout strategy to create pods based on the old replicaSet while removing the pods from the current one. 
 
 ```yaml
 apiVersion: apps/v1
@@ -127,6 +158,15 @@ spec:
         - containerPort: 80   # tells the container which port to expose
 
 ```
+
+#### Useful commands
+
+- `kubectl run <deployment-name> --image=<image-name> - l "<key:>:<value>,<key>:<value>"` - creates a deploymenrt
+- `kubectl rollout status deployment <deployment-name>` - get status of the deployment process
+- `kubectl set image deployment <deployment-name> <container-name>=<new-image> --record ` - updates the image of the container inside the deployment while recording the command in the rollout deployment history
+- `kubectl rollout history deployment <deployment-name>` - shows the history of a deployment 
+- `kubectl scale deploy <deployment-name>
+
 
 ### Namespaces
 
@@ -440,7 +480,7 @@ affinity:
               - <value2>
 ```
 
-> Node anti-affinity doesn't have a seperate clause for itself. You control it using the operators in the 
+> Node anti-affinity doesn't have a separate clause for itself. You control it using the operators in the 
 
 > Node affinity is defined on the pod spec, meaning that that pod will be placed on a node with a matching label, it doesn't however restrict other pods from being scheduled on that node. 
 
@@ -578,7 +618,7 @@ Static pods create using the kubelet directly show up in `kubectl get pods` as w
 SP: Created by Kubelet
 DS: Created by Kube API server using the DaemonSet Controller
 
-SP: Used to deploy contorl plane components as static pods.
+SP: Used to deploy control plane components as static pods.
 DS: Deploy Monitoring, Alerting etc. per node agents
 
 Both are ignored by kube-scheduler. the kube scheduler has no effect on these resources.
