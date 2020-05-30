@@ -1,8 +1,8 @@
 ---
 title: Docker Workshop
 tags: [docker, cloud native, containers]
-style: 
-color: dark
+style: fill
+color: secondary
 description: A short and sweet getting started with Docker guide.
 ---
 

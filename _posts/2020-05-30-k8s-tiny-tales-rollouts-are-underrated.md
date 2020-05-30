@@ -1,10 +1,12 @@
 ---
 title: k8s Tiny Tales - Rollouts are underrated
 tags: [kubernetes, cloud native, deployment, rollout, development]
-style: 
-color: 
+style: fill
+color: info
 description: Creating and working with rollouts in kubernetes
 ---
+
+![](/assets/tiny-tales.png)
 
 ## Background
 

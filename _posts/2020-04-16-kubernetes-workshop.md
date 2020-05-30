@@ -1,8 +1,8 @@
 ---
 title: Kubernetes Workshop
 tags: [kubernetes, cloud native, orchestration, microservices]
-style: 
-color: dark
+style: fill
+color: secondary
 description: A short and sweet getting started with Kubernetes guide.
 ---
 

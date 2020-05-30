@@ -1,10 +1,12 @@
 ---
 title: k8s Tiny Tales - Creating Baby Admins
 tags: [kubernetes, k8s, administration]
-style: 
-color: 
+style: fill
+color: info
 description: Create more admin users for your cluster namespaces
 ---
+
+![](/assets/tiny-tales.png)
 
 ## Background
 

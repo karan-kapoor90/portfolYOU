@@ -14,11 +14,11 @@ I'm a Technology Evangelist who loves riding the global technology wave. There's
 Outside the realm of technology - business, finance and investment interest me. I'm also an avid watch enthusiast and a Space nerd.
 
 I typically work in areas concerning 
+* Microservices and Serverless computing
+* Docker and Kubernetes
 * Integration 
 * API Management and Monitization
 * Service orchestration using Service-Oriented-Architecture for enterprise solutions 
-* Microservices and Serverless computing
-* Docker and Kubernetes
 * Hyperledger Fabric 
 * Full stack web technology 
 
