@@ -9,10 +9,10 @@ description: A short and sweet getting started with Docker guide.
 This is a very basic, 20 minute quick guide to running your first docker container running an application. 
 
 ## Prerequisites
-- Docker desktop installed on your machine for your platform
-- git
-- A github user account (optional)
-- A docker hub account
+- [Docker desktop downloaded and installed](https://www.docker.com/products/docker-desktop) on your machine. 
+- [Git command line downloaded and installed](https://git-scm.com/downloads) on your machine
+- A [github user](https://github.com/join) account (optional)
+- A [docker hub account](https://hub.docker.com/signup)
 
 ### Verify your installation
 
@@ -117,17 +117,24 @@ This is a very basic, 20 minute quick guide to running your first docker contain
     # But the happy scenario, in case you don't have nodejs installed on your machine, docker to the rescue
     ```
 
-8. Explore the code.. as a shortcut, consider reading the readme file on the repo.
+8. Explore the code.. as a shortcut, consider reading the readme file on the [git repository](https://github.com/karan-kapoor90/docker-workshop).
 
-9. Build a docker container for your code
+9. Build a docker container for your code. PS: The following step creates a docker image which
+    - Is based on a nodejs base image
+    - Takes a copy of your code's dependencies (that's the package.json file for a nodejs app)
+    - Downloads all those dependencies into a folder
+    - Copies your code into the same folder
+    - Declares the command that is used to run your code (`node index.js` in this case.)
 
     > PS: My dockerhub username is karankapoor
 
     ```bash
     export DOCKER_USERNAME=<your-dockerhub-username>
     # building your container locally
-    docker build -t $DOCKER_USERNAME/docker-workshop .
+    docker build -t $DOCKER_USERNAME/docker-workshop:latest -f Dockerfile .
     ```
+    > All the steps defined above, and more, such as setting environment variables, creating an image that depends on the output of multiple such images (aka multistage images) etc., is all defined in the `Dockerfile` file in the code you just checked out from github.
+
 
 10. Run the container locally, exposing the app on port 30000 of your local host machine
 
@@ -143,8 +150,7 @@ This is a very basic, 20 minute quick guide to running your first docker contain
     ```bash
     http://localhost:30000/
     http://localhost:30000/welcome.html
-    http://localhost:30000/hello   # a GET endpoint that responds with a hello in plaintext
-
+    http://localhost:30000/hello   # a GET endpoint that responds with some JSON content
     ```
 
 12. Clean up
@@ -153,11 +159,15 @@ This is a very basic, 20 minute quick guide to running your first docker contain
     docker container stop $(docker container ls -aq)   # Stop all running containers
     ```
 
+
+### Pushing your first image to dockerhub
+
+
 13. Your first container for the world to see
 
     ```bash
     docker login   # it will ask you for your docker registry credentials. Since we're using dockerhub, no need to provide a registry URL
-    docker push $DOCKER_USERNAME/docker-workshop   # this will push your docker container to docker hub, kind of like a github for docker containers.
+    docker push $DOCKER_USERNAME/docker-workshop:latest   # this will push your docker container to docker hub, kind of like a github for docker containers.
     ```
 
 Now you're a champ! But why stop here? If you installed docker desktop for your platform, most likely, you also have a local distribution of kubernetes running on your machine.

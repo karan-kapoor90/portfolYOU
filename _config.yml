@@ -33,7 +33,7 @@ author:
 google_analytics: UA-71953143-1
 certification: "/assets/oci.png" #https://karankapoor.s3.ap-south-1.amazonaws.com/OCICert.JPG
 ### Pagination ###
-paginate: 6
+paginate: 15
 paginate_path: "/articles/page-:num/"
 
 
